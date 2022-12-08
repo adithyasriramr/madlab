@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+
+//main entry point
+void main(){
+  runApp(GroceryStoreApp());
+}
+
+class GroceryStoreApp extends StatefulWidget {
+  @override
+  _GroceryStoreAppState createState() => _GroceryStoreAppState();
+}
+
+class _GroceryStoreAppState extends State<GroceryStoreApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Grocery Store'),
+        ),
+        body: LayoutManager(
+          onItemSelected: (String item) {
+            print('Item Selected: $item');
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class LayoutManager extends StatefulWidget {
+  final ValueChanged<String> onItemSelected;
+
+  LayoutManager({required this.onItemSelected});
+
+  @override
+  _LayoutManagerState createState() => _LayoutManagerState();
+}
+
+class _LayoutManagerState extends State<LayoutManager> {
+  int _selectedIndex = 0;
+
+  List<String> _items = [
+    'Bread',
+    'Milk',
+    'Cheese',
+    'Eggs',
+    'Fruit',
+    'Vegetables',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Grocery Store',
+            style: Theme.of(context).textTheme.headline1,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _items.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_items[index]),
+                  selected: _selectedIndex == index,
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = index;
+                      if (widget.onItemSelected != null) {
+                        widget.onItemSelected(_items[index]);
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

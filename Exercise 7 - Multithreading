@@ -1,0 +1,95 @@
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+void main() {
+  runApp(const MyApp());
+}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Multithreading demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: const Home(),
+    );
+  }
+}
+Future<String> deserializeApi(String apiUrl) async {
+  http.Response response = await http.get(Uri.parse(apiUrl));
+  Map<String, dynamic> dataMap = jsonDecode(response.body);
+  return dataMap['joke'];
+}
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+  @override
+  State<Home> createState() => _HomeState();
+}
+class _HomeState extends State<Home> {
+  String joke = '';
+  bool isLoading = false;
+
+  Future generateJoke() async {
+    setState(() {
+      isLoading = true;
+    });
+    joke = await compute(deserializeApi,
+        'https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single');
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Multithreading"),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (joke != '') ...[
+                Text(
+                  joke,
+                  style: const TextStyle(
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 80),
+              ],
+              ElevatedButton(
+                onPressed: generateJoke,
+                child: (isLoading)
+                    ? const Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 20,
+                  ),
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+                    : const Text(
+                  "Generate a Joke",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

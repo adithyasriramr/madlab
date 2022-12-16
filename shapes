@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: CarDrawingPage(),
+    );
+  }
+}
+
+class CarDrawingPage extends StatefulWidget {
+  @override
+  _CarDrawingPageState createState() => _CarDrawingPageState();
+}
+
+class _CarDrawingPageState extends State<CarDrawingPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Draw a car'),
+      ),
+      body: Center(
+        child: Container(
+          width: 200.0,
+          height: 200.0,
+          child: CustomPaint(
+            painter: CarPainter(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CarPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = Colors.black;
+    final a=Offset(200,200);
+    final b=Offset(150,150);
+    final rect=Rect.fromPoints(a,b);//for rounded rectangle use RoundedRect and add radius also
+    canvas.drawRect(rect,paint);//for rectangle
+    Offset start=Offset(0,-25);
+    Offset end=Offset(200,-25);
+    final center=Offset(size.width/2,size.height/2);
+    canvas.drawCircle(center,size.width*1/4,paint);//for circle
+    canvas.drawLine(start,end,paint);//for line
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}

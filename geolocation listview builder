@@ -1,0 +1,72 @@
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Position _currentPosition;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Location and List View Builder"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (_currentPosition != null)
+              Text("Location:" +
+                  _currentPosition.latitude.toString() +
+                  " " +
+                  _currentPosition.longitude.toString()),
+            FlatButton(
+              child: Text("Get Location"),
+              onPressed: () {
+                _getCurrentLocation();
+              },
+            ),
+            ListView.builder(
+              itemBuilder: (context, index) => ListTile(
+                title: Text("Item $index"),
+              ),
+              itemCount: 10,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  _getCurrentLocation() {
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+}
+
+// Sample Output
+// Location:12.772345 123.123456
+// Get Location
+// Item 0
+// Item 1
+// Item 2
+// Item 3
+// Item 4
+// Item 5
+// Item 6
+// Item 7
+// Item 8
+// Item 9

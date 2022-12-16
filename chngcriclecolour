@@ -1,0 +1,56 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.teal,
+        body: Center(
+          child: ColorfulCircle(),
+        ),
+      ),
+    );
+  }
+}
+
+class ColorfulCircle extends StatefulWidget {
+  @override
+  _ColorfulCircleState createState() => _ColorfulCircleState();
+}
+
+class _ColorfulCircleState extends State<ColorfulCircle> {
+  Color _circleColor = Colors.white;
+
+  void changeCircleColor() {
+    setState(() {
+      _circleColor = _circleColor == Colors.white ? Colors.purple : Colors.white;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+              color: _circleColor,
+              shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextButton(
+          onPressed: changeCircleColor,
+          child: Text('Change Color'),
+        ),
+      ],
+    );
+  }
+}

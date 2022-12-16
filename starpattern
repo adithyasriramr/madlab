@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+
+void main() { 
+  runApp(StarPatternApp()); 
+} 
+
+class StarPatternApp extends StatelessWidget { 
+  @override 
+  Widget build(BuildContext context) { 
+    return MaterialApp( 
+      title: 'Star Pattern App', 
+      home: StarPatternHomePage(), 
+    ); 
+  } 
+} 
+
+class StarPatternHomePage extends StatefulWidget { 
+  @override 
+  _StarPatternHomePageState createState() => _StarPatternHomePageState(); 
+} 
+
+class _StarPatternHomePageState extends State<StarPatternHomePage> { 
+  int _nLines=0; // number of lines in the pattern 
+
+  @override 
+  Widget build(BuildContext context) { 
+    return Scaffold( 
+      appBar: AppBar( 
+        title: Text('Star Pattern App'), 
+      ), 
+      body: Center( 
+        child: Column( 
+          mainAxisAlignment: MainAxisAlignment.center, 
+          children: <Widget>[ 
+            Text('Enter the number of lines for the star pattern:'), 
+            TextField( 
+              keyboardType: TextInputType.number, 
+              onChanged: (value) { 
+                setState(() { 
+                  _nLines = int.parse(value); 
+                }); 
+              }, 
+            ), 
+            _nLines != null 
+                ? Text( 
+                    'Star Pattern with $_nLines lines: \n\n${generateStarPattern(_nLines)}', 
+                    textAlign: TextAlign.center, 
+                  ) 
+                : Text(''), 
+          ], 
+        ), 
+      ), 
+    ); 
+  } 
+
+  String generateStarPattern(int nLines) { 
+    String starPattern = ''; 
+
+    for (int i = 1; i <= nLines; i++) { 
+      for (int j = 1; j <= i; j++) { 
+        starPattern += '* '; 
+      } 
+      starPattern += '\n'; 
+    } 
+
+    return starPattern; 
+  } 
+}

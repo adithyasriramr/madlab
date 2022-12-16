@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Write Data to Local Storage'),
+        ),
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              Text('Write data to local storage'),
+              ElevatedButton(
+                onPressed: () {
+                  // Write data to local storage
+                  writeDataToLocalStorage();
+                },
+                child: Text('Write'),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void writeDataToLocalStorage() async {
+    try {
+      // Create a reference to the local path
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/myData.txt');
+
+      // Write data to the file
+      file.writeAsString('My data');
+    } catch (e) {
+      print(e);
+    }
+  }
+}

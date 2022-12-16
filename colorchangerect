@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+ 
+void main() => runApp(MyApp());
+ 
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      home: MyHomePage(),
+    );
+  }
+}
+ 
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+ 
+class _MyHomePageState extends State<MyHomePage> {
+  Color _rectangleColor = Colors.yellow;
+ 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(//draws the rectangle
+              height: 200,
+              width: 300,
+              color: _rectangleColor,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _rectangleColor = Colors.red;
+                });
+              },
+              child: Text('Change Color'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

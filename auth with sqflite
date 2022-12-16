@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+
+class AuthPage extends StatefulWidget {
+  @override
+  _AuthPageState createState() => _AuthPageState();
+}
+
+class _AuthPageState extends State<AuthPage> {
+  Database _database; // instantiate the database
+  String _username;
+  String _password;
+
+  @override
+  void initState() {
+    super.initState();
+    _initDatabase();
+  }
+
+  Future<void> _initDatabase() async {
+    var databasesPath = await getDatabasesPath();
+    String path = databasesPath + "/auth.db";
+    _database = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      // When creating the db, create the table
+      await db.execute(
+          "CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)");
+    });
+  }
+
+  Future<void> _authenticateUser() async {
+    var result = await _database.query("users",
+        where: "username = ? AND password = ?",
+        whereArgs: [_username, _password]);
+    if (result.length > 0) {
+      // User found, authentication successful
+    } else {
+      // User not found, authentication failed
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Authentication'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                // username
+                decoration: InputDecoration(labelText: 'Username'),
+                onChanged: (value) {
+                  _username = value;
+                },
+              ),
+              TextFormField(
+                // password
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+                onChanged: (value) {
+                  _password = value;
+                },
+              ),
+              RaisedButton(
+                child: Text('Authenticate'),
+                onPressed: _authenticateUser,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
+class MyLocationButtonPage extends StatefulWidget {
+  @override
+  _MyLocationButtonPageState createState() => _MyLocationButtonPageState();
+}
+
+class _MyLocationButtonPageState extends State<MyLocationButtonPage> {
+  Position _currentPosition;
+  String _currentAddress;
+
+  void _getCurrentLocation() async {
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentPosition = position;
+    });
+    try {
+      List<Placemark> placemarks = await Geolocator().placemarkFromCoordinates(_currentPosition.latitude, _currentPosition.longitude);
+      Placemark placemark = placemarks[0];
+      String address = "${placemark.locality}, ${placemark.postalCode}, ${placemark.country}";
+      setState(() {
+        _currentAddress = address;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: _currentPosition == null
+            ? FlatButton(
+                onPressed: () => _getCurrentLocation(),
+                child: Text("Get Current Location"),
+              )
+            : Text(_currentAddress),
+      ),
+    );
+  }
+}
